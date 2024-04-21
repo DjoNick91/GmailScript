@@ -46,7 +46,7 @@ def get_messages(service):
     for r in results['messages']:
         id = r['id']
         messages = service.users().messages().get(userId='me', id=id).execute()
-        print(messages['id'])
+
         headers = messages['payload']['headers']
         otvet = {}
         for h in headers:
@@ -60,7 +60,6 @@ def get_messages(service):
                 date = h['value']
                 otvet['Дата'] = date
         print(otvet)
-        pass
 
 
 def sent_message(service):
@@ -82,7 +81,6 @@ def sent_message(service):
         .execute()
     )
     print(f'Сообщение отправлено. Message id: {send_message["id"]}')
-    pass
 
 
 def delete_message(service):
@@ -90,21 +88,27 @@ def delete_message(service):
     message_id = input('Введите id сообщения, которое нужно удалить: ')
     try:
         service.users().messages().trash(userId='me', id=message_id).execute()
+        print('Сообщение удалено!')
     except Exception:
         print("Сообщения с указаным id не существует")
 
 
 if __name__ == "__main__":
-    print(f'Данный скрипт позволяет:\n'
-          f'1. Получить 5 последних сообщений\n'
-          f'2. Отправить тестовое соообщение самому себе\n'
-          f'3. Удалить сообщение по идентификатору')
-    choise = input('Выберите действие: ')
-    if choise == '1':
-        get_messages(login())
-    if choise == '2':
-        sent_message(login())
-    if choise == '3':
-        delete_message(login())
-    else:
-        print('Вы ввели не корректный номер')
+    while True:
+        print(f'---------------------------------------------\n'
+            f'Данный скрипт позволяет:\n'
+            f'1. Получить 5 последних сообщений\n'
+            f'2. Отправить тестовое соообщение самому себе\n'
+            f'3. Удалить сообщение по идентификатору\n'
+            f'4. Выход')
+        choise = input('Выберите действие: ')
+        if choise == '1':
+            get_messages(login())
+        elif choise == '2':
+            sent_message(login())
+        elif choise == '3':
+            delete_message(login())
+        elif choise == '4':
+            break
+        else:    
+            print('Вы ввели не корректный номер')
